@@ -1,0 +1,33 @@
+{
+  "name": "resumeanalyzer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "http-status-codes": "^2.3.0",
+    "index": "^0.4.0",
+    "js": "^0.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.14.1",
+    "mongosh": "^2.5.0",
+    "multer": "^1.4.5-lts.2",
+    "mutter": "^1.0.1",
+    "node": "^22.15.0",
+    "node-fetch": "^2.7.0",
+    "nodemon": "^3.1.10",
+    "openai": "^4.96.2",
+    "pdf-parse": "^1.1.1",
+    "uuid": "^11.1.0"
+  }
+}
