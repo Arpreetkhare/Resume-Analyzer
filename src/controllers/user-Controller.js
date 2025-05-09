@@ -1,7 +1,7 @@
 
 // const { register } = require("module");
 const User = require("../models/user-model");
-const {getUserByUserId , getUserByUsername } = require("../crud/user-Crud");
+const {getUserByUserId , getUserByUsername , getAll } = require("../crud/user-Crud");
 const { hashPass , comparePass ,createToken} = require("../utils/user-Util");
 const {StatusCodes} = require("http-status-codes");
 
@@ -15,7 +15,7 @@ async function registerUser(req , res){
 
        /// getiing user with crud fuction {getUser};
         const user = await getUserByUsername(username);
-        console.log("user " , user);
+        // console.log("user " , user);
 
 
         /// cheacking if user already there or not;
@@ -150,6 +150,21 @@ async function deleteUser(req,res) {
     
 }
 
+async function getAllUsers(req,res) {
+    try {
+        //getting all users
+        const allUsers= await getAll();
+        if(!allUsers){
+            return res.status(StatusCodes.NOT_FOUND).json({ Message: "No user!" });
+        }
+
+        return res.status(StatusCodes.OK).json({data: allUsers});
+
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Message: "An error occurred", details: error.message });
+    }
+}
 
 
-module.exports = { registerUser , loginUser , deleteUser , updateUser};
+
+module.exports = { registerUser , loginUser , deleteUser , updateUser , getAllUsers};

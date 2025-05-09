@@ -25,6 +25,11 @@ async function getUserByUserId(userID){
 
 }
 
-module.exports = { getUserByUserId , getUserByUsername } ;
+async function getAll() {
+    const allUsers=await User.find({},"-password");
+    return allUsers;
+}
+
+module.exports = { getUserByUserId , getUserByUsername ,getAll } ;
     
 

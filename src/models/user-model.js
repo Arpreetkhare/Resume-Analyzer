@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { type } = require("os");
 // const { type } = require("os");
 const { v4: uuidv4 } = require("uuid");
 
@@ -29,6 +30,12 @@ const userSchema = mongoose.Schema(
             type:String,
             required: true,
             unique:true,
+        },
+
+        role:{
+            type: String,
+            enum: ['user','admin'],
+            default: 'user'
         }
     }
 )
