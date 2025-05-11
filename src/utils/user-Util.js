@@ -26,17 +26,9 @@ async function comparePass(password , storedPass) {
     para2 : stored password ( which already there is server);`
 
 
-    ///compareing passwrod;
-    const isMatch = await bcrypt.compare(password ,storedPass);
+   
 
-    ///does not match then throwing error;
-    if(!isMatch){
-        const error = new Error("No user with this password!");
-        error.status = StatusCodes.NOT_FOUND ;
-        throw error;
-    }
-    ///else return 
-    return true;
+    return await bcrypt.compare(password, storedPass);
     
 }
 

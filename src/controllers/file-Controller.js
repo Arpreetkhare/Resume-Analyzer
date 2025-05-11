@@ -28,7 +28,7 @@ const analyzeResume = async (req , res)=>{
 
         /// will return an error if the file is empty;
         if(!fileData || fileData.length===0){
-            res.status(StatusCodes.BAD_REQUEST).json({Error : "file is Empty!"});
+            return res.status(StatusCodes.BAD_REQUEST).json({Error : "file is Empty!"});
         }
 
         ///converting or extracting text from filedata avoing images and extra 

@@ -1,6 +1,7 @@
 const express =require("express");
 const resumeRouter = require("./src/routes/resume-Route");
 const userRouter = require('./src/routes/user-Route');
+const cors = require("cors");
 
 
 const database = require("./src/config/database");
@@ -14,7 +15,9 @@ const uri = process.env.DB_uri;
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+
 
 const PORT = process.env.PORT || 3000;
 

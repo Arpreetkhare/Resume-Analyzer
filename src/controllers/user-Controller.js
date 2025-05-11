@@ -1,9 +1,10 @@
 
 // const { register } = require("module");
 const User = require("../models/user-model");
-const {getUserByUserId , getUserByUsername , getAll } = require("../crud/user-Crud");
+const {getUserByUserId , getUserByUsername } = require("../crud/user-Crud");
 const { hashPass , comparePass ,createToken} = require("../utils/user-Util");
 const {StatusCodes} = require("http-status-codes");
+// const { JsonWebTokenError } = require("jsonwebtoken");
 
 
 async function registerUser(req , res){
@@ -15,17 +16,20 @@ async function registerUser(req , res){
 
        /// getiing user with crud fuction {getUser};
         const user = await getUserByUsername(username);
-        // console.log("user " , user);
+
 
 
         /// cheacking if user already there or not;
         if(user){
-            res.status(StatusCodes.CONFLICT).json({ Message: "User already exists!" });
+            return res.status(StatusCodes.CONFLICT).json({ Message: "User already exists!" });
         }
 
         /// hashing pass before in process of creating user;
 
         const hashPassword = await hashPass(password);
+        
+
+
         // console.log("hashpassword " , hashPassword);
 
         /// creating user;
@@ -35,6 +39,10 @@ async function registerUser(req , res){
             password : hashPassword,
 
         });
+
+        
+
+        
 
         /// saving user into database'
         await newUser.save();
@@ -59,18 +67,30 @@ async function loginUser(req,res) {
        const  {username , password} = req.body;
 
        if(!username || !password){
-        res.status(StatusCodes.BAD_REQUEST).json({Message : "All fields  are required!"})
+        return res.status(StatusCodes.BAD_REQUEST).json({Message : "All fields  are required!"})
 
        }
        /// getiing user with crud fuction {getUser};
        const user = await getUserByUsername(username);
+       console.log("Fetched user:", user);
+       if(!user){
+        return res.status(StatusCodes.CONFLICT).json({ Message: "User does not exists!" });
+        }
 
        /// comparing password to password which inside server;
-       await comparePass(password , user.password);
+       
+       const isPasswordValid = await comparePass(password, user.password);
+        if (!isPasswordValid) {
+            return res
+            .status(StatusCodes.UNAUTHORIZED)
+            .json({ message: "Invalid credentials!" });
+        }
 
         const payload = {
             username : user.username,
             userID:user.userID,
+            email: user.email,
+            
         };
 
        const token = await createToken(payload);
@@ -94,7 +114,12 @@ async function loginUser(req,res) {
 async function updateUser(req,res) {
     try{
        /// getiing user with crud fuction {getUser};
-        const user = await getUserByUsername(req.body.username);
+
+        // const curr_user = req.user.username;
+     
+        console.log("req.user " , req.user);
+
+        const user = await getUserByUsername(req.user.usernam);
         if (!user) {
             return res.status(StatusCodes.NOT_FOUND).json({ Message: "User not found!" });
         }
@@ -128,11 +153,9 @@ async function deleteUser(req,res) {
     try{
         /// getiing user with crud fuction {getUser};
         // const user = await getUser(req.params.username);
-        const user = await getUserByUserId(req.params.userID);
-        console.log(user);
-
+        const user = await getUserByUserId(req.user.userID);
         if (!user) {
-            return res.status(StatusCodes.NOT_FOUND).json({ Message: "User not found!" });
+            return res.status(StatusCodes.BAD_REQUEST).json({ Message: "User not found!" });
         }
         // console.log("user " , user);
 
@@ -165,6 +188,36 @@ async function getAllUsers(req,res) {
     }
 }
 
+async function currentUser(req,res) {
+    try{
+       const curr_user = req.user;
+       console.log("curruser " , curr_user);
+       const username = req.user.username;
+       console.log("username " , username);
+       const username1 = curr_user.username;
+       console.log("username1 " , username1);
 
 
-module.exports = { registerUser , loginUser , deleteUser , updateUser , getAllUsers};
+       const user = User.findOne({username : curr_user.username})
+       if(!user){
+            return res.status(StatusCodes.BAD_REQUEST).json({ Message: "token is not valid"});
+       }
+
+       return res.status(StatusCodes.OK).json({data: curr_user});
+
+
+    }
+    catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Message: "An error occurred", details: error.message });
+    }
+
+
+    
+}
+
+
+
+
+
+
+module.exports = { registerUser , loginUser , deleteUser , updateUser , getAllUsers , currentUser};

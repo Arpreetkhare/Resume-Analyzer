@@ -5,7 +5,7 @@ const {isAdmin} = require("../middlewares/admin-middleware");
 
 const userRouter = express.Router();
 const {
-    registerUser , loginUser, updateUser , deleteUser , getAllUsers
+    registerUser , loginUser, updateUser , deleteUser , getAllUsers , currentUser
 } = require("../controllers/user-Controller");
 
 // Register
@@ -18,12 +18,14 @@ userRouter.post("/login" , loginUser);
 userRouter.put("/update" , validateToken , updateUser);
 
 // Delete user by username
-userRouter.delete("/delete/:userID" , validateToken , deleteUser);
+userRouter.delete("/delete" , validateToken , deleteUser);
 
 
 //For the admin only routes
 
 userRouter.get("/users", validateToken , isAdmin , getAllUsers);
+
+userRouter.get("/currUser" , validateToken , currentUser);
 
 
 
