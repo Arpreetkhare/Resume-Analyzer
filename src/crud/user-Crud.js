@@ -8,6 +8,7 @@ async function getUserByUsername(username){
     ///mongo query to find user with username;
     const user = await User.findOne({username});
     
+    
 
     return user;
 
