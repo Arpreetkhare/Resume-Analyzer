@@ -102,8 +102,6 @@ async function loginUser(req,res) {
 
 
     }
-
-        
     catch (error){
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
     }
