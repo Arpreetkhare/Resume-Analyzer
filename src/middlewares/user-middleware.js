@@ -24,9 +24,14 @@ async function validateToken(req,res,next){
         if(!decoded || !decoded.username){
             return res.status(StatusCodes.BAD_REQUEST).json({Message : "token is missing user information!", error : err.message});
         }
+        req.user = {
+            userID: decoded.userID,
+            username: decoded.username,
+            email: decoded.email,
+            
+        }
 
-        req.userID= decoded.userID;
-        req.username =  decoded.username;
+       
         next();
     });
 
